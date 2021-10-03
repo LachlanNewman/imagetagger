@@ -30,7 +30,8 @@ router.put("/:id", async (req:Request,res: Response, next: NextFunction) => {
     const id = req.params.id;
     const title =  req.body.titlel
     const desc = req.body.desc;
-    const image = await Image.findByIdAndUpdate(id,{title,desc})
+    await Image.findByIdAndUpdate(id,{title,desc})
+    const image = await Image.findById(id);
     res.send(image)
 })
 
@@ -44,7 +45,9 @@ router.delete("/:id",async (req:Request,res: Response, next: NextFunction) => {
 router.post("/:id/tags",async (req:Request,res: Response,next:NextFunction) => {
     const id = req.params.id;
     const tags = req.body.tags as string[]
-    const image = await Image.findByIdAndUpdate(id,{tags})
+    console.log(tags)
+    await Image.findByIdAndUpdate(id,{tags})
+    const image = await Image.findById(id);
     res.send(image)
 })
 
