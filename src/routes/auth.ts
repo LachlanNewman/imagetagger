@@ -5,7 +5,7 @@ import { invalidUserNameError, invalidJWTError } from "../error";
 import jwt from "jsonwebtoken"
 
 
-const secretKey = "SecretKey";
+const secretKey = "secretkey";
 const router = Router()
 
 async function verifyUser(username: string, password: string): Promise<boolean>{

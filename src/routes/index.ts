@@ -8,7 +8,7 @@ const routes = Router();
 
 routes.use('/images',authenticateMiddleware,imageRouter);
 routes.use('/tags'  ,authenticateMiddleware,tagRouter);
-routes.use("/users" ,userRouter)
+routes.use("/user" ,userRouter)
 routes.use("/auth"  ,authRouter)
 
 export default routes;

@@ -15,6 +15,7 @@ export const handleErrorMiddleware = (error:HttpError, req:Request, res:Response
       statusCode,
       message
     });
+    return
   };
 
 export const invalidUserNameError   = new HttpError(401, "Invalid Username or Password" )
@@ -24,3 +25,4 @@ export const userNameRequiredError  = new HttpError(400, "Username Required"    
 export const titleRequiredError     = new HttpError(400, "Image Title Required"         )
 export const descRequiredError      = new HttpError(400, "Image Description Required"   )
 export const invalidPasswordError   = new HttpError(401, "Password must be minimum eight characters, at least one upper case English letter, one lower case English letter, one number and one special character")
+export const imageNotFoundError     = new HttpError(404, "Image Not Found"              )

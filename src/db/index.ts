@@ -5,6 +5,10 @@ export class DB {
         return mongoose.connect(url)
     }
 
+    public static async dropDB(){
+        return mongoose.connection.dropDatabase();
+    }
+
     public static async closeCon() {
         return mongoose.connection.close(true);
     }

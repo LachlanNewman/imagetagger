@@ -26,7 +26,10 @@ router.post("/", async (req:Request,res: Response,next:NextFunction) => {
     const user = new User({username, password});
 
     user.save()
-    .then(() => res.send({username: user.username}))
+    .then(() => {
+        res.statusCode = 201;
+        res.send({username: user.username})
+    })
     .catch((err: HttpError) => next(err))
 })
 
