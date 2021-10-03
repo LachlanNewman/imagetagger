@@ -1,35 +1,19 @@
 import { Router , Request, Response, NextFunction } from "express";
+import Image from "../models/image";
 
 const router = Router()
 
-export interface Image {
-    id: string;
-    title: string;
-    desc: String,
-    tags: string[];
-};
-
-export const images: Image[] = [{
-    id: "0",
-    title: "testtitle",
-    desc: "testDesc",
-    tags: ["tag1", "tag2"]
-}]
-
-router.get("/", (req:Request,res: Response,next:NextFunction) => {
+router.get("/", async (req:Request,res: Response,next:NextFunction) => {
+    const images = await Image.find()
     res.send(images)
 })
 
-router.post("/",(req:Request,res: Response, next: NextFunction) => {
+router.post("/", async(req:Request,res: Response, next: NextFunction) => {
     const title = req.body.title;
     const desc = req.body.desc;
-    const id = images.length.toString();
-    images.push({
-        id,
-        title,
-        desc,
-        tags: []
-    })
+    const tags:string[] = [];
+    const image = new Image({title,desc,tags})
+    await image.save();
     res.statusCode = 201;
     res.send({
         title,
@@ -38,41 +22,29 @@ router.post("/",(req:Request,res: Response, next: NextFunction) => {
 })
 
 router.get("/:id",async (req:Request,res: Response,next:NextFunction) => {
-    const id = parseInt(req.params.id);
-    const image = images[id]
+    const image = await Image.findById(req.params.id);
     res.send(image)
 })
 
-router.put("/:id",async (req:Request,res: Response, next: NextFunction) => {
-    const id = parseInt(req.params.id);
-    const title = req.body.title;
+router.put("/:id", async (req:Request,res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const title =  req.body.titlel
     const desc = req.body.desc;
-    const image = images[id]
-    image.title = title;
-    image.desc = desc;
-    res.statusCode = 201;
-    res.send(image);
+    const image = await Image.findByIdAndUpdate(id,{title,desc})
+    res.send(image)
 })
 
 router.delete("/:id",async (req:Request,res: Response, next: NextFunction) => {
-    const id = parseInt(req.params.id);
-    delete images[id]
+    const id = req.params.id;
+    await Image.findByIdAndDelete(id)
     res.statusCode = 204
     res.send({});
 })
 
-router.get("/:id/tags",async (req:Request,res: Response,next:NextFunction) => {
-    const id = parseInt(req.params.id);
-    const image = images[id]
-    const tags = image.tags;
-    res.send({tags})
-})
-
 router.post("/:id/tags",async (req:Request,res: Response,next:NextFunction) => {
+    const id = req.params.id;
     const tags = req.body.tags as string[]
-    const id = parseInt(req.params.id);
-    const image = images[id]
-    image.tags = tags;
+    const image = await Image.findByIdAndUpdate(id,{tags})
     res.send(image)
 })
 
