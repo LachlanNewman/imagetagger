@@ -1,20 +1,18 @@
-import express from "express"
 import config from "./config";
 import { DB } from "./db";
-import { handleErrorMiddleware } from "./error";
-import routes from "./routes"
+import server from "./server"
+import fs from "fs"
 
 const port = config.PORT;
 const dbURL = config.DB_URL;
+const imageDir = config.IMG_DIR
+
+// check images directory exists
+if (!fs.existsSync(imageDir)) {
+   fs.mkdirSync(imageDir)
+}
 
 DB.initDB(dbURL)
-
-const server = express()
-server.use(express.urlencoded({extended: true}));
-server.use(express.json())
-server.use(routes);
-server.use(handleErrorMiddleware)
-
 server.listen(port, () => console.log(`Listening on port ${port}`))
 
 export default server;
