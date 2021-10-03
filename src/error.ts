@@ -18,3 +18,4 @@ export const handleErrorMiddleware = (error:HttpError, req:Request, res:Response
   };
 
 export const invalidUserNameError   = new HttpError(401, "Invalid Username or Password" )
+export const invalidJWTError        = new HttpError(401, "JWT Token is invalid"         )

@@ -1,7 +1,7 @@
 import { Router , Request, Response, NextFunction } from "express";
 import User from "../models/user";
 import bcrypt from "bcrypt"
-import { invalidUserNameError } from "../error";
+import { invalidUserNameError, invalidJWTError } from "../error";
 import jwt from "jsonwebtoken"
 
 
@@ -17,6 +17,23 @@ async function verifyUser(username: string, password: string): Promise<boolean>{
         }
     }
     return false;
+}
+
+export const authenticateMiddleware = (req:Request, res: Response, next: NextFunction) => {
+    const token  = req.headers.authorization as string;
+    jwt.verify(token, secretKey, async function(err, credentials){
+        if(err){
+            next(invalidJWTError)
+            return
+        }
+        credentials = credentials as {username:string, password: string};
+        const userVerified = await verifyUser(credentials.username, credentials.password)
+        if(!userVerified){
+            next(invalidUserNameError);
+            return
+        }
+        next()
+    })
 }
 
 router.post("/",async (req:Request,res: Response,next:NextFunction) => {
