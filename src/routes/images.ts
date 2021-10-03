@@ -9,7 +9,6 @@ const images = [{
 }]
 
 router.get("/", (req:Request,res: Response,next:NextFunction) => {
-
     res.send(images)
 })
 
@@ -34,6 +33,13 @@ router.get("/:id",async (req:Request,res: Response,next:NextFunction) => {
     const id = parseInt(req.params.id);
     const image = images[id]
     res.send(image)
+})
+
+router.delete("/:id",async (req:Request,res: Response, next: NextFunction) => {
+    const id = parseInt(req.params.id);
+    delete images[id]
+    res.statusCode = 204
+    res.send({});
 })
 
 export default router;
