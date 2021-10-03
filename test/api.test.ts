@@ -4,6 +4,7 @@ import server from '../src/server';
 import {DB} from "../src/db"
 import jwt from "jsonwebtoken"
 import config from "../src/config"
+import fs from "fs"
 
 const secretKey = "secretkey";
 const user = {
@@ -161,5 +162,6 @@ describe("Image Routes", () => {
             .delete(`/images/${image1}`)
             .set("Authorization",token);
         expect(res.statusCode).equal(204);
+        expect(!fs.existsSync(`./images/${image1}`)).to.be.true;
     });
 });

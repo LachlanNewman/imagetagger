@@ -2,6 +2,8 @@ import { Router , Request, Response, NextFunction } from "express";
 import { descRequiredError, imageNotFoundError, titleRequiredError } from "../error";
 import Image from "../models/image";
 import multer from "multer";
+import fs from "fs";
+import config from "../config";
 
 const storage = multer.diskStorage({
     destination: (req:Request, file, cb) => {
@@ -68,6 +70,7 @@ router.put("/:id", async (req:Request,res: Response, next: NextFunction) => {
 router.delete("/:id",async (req:Request,res: Response, next: NextFunction) => {
     const id = req.params.id;
     await Image.findByIdAndDelete(id)
+    fs.unlinkSync(`${config.IMG_DIR}/${id}`)
     res.statusCode = 204
     res.send({});
 })
@@ -75,7 +78,6 @@ router.delete("/:id",async (req:Request,res: Response, next: NextFunction) => {
 router.post("/:id/tags",async (req:Request,res: Response,next:NextFunction) => {
     const id = req.params.id;
     const tags = req.body.tags as string[]
-    console.log(tags)
     await Image.findByIdAndUpdate(id,{tags})
     const image = await Image.findById(id);
     res.send(image)

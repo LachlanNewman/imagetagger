@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Image Tagging API",
   "scripts": {
+    "start": "node dist/src",
     "dev": "nodemon ./src/index.ts",
     "build": "tsc",
     "test": "mocha -r ts-node/register test/**/*.test.ts"
