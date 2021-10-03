@@ -1,6 +1,10 @@
 import express from "express"
+import config from "./config";
 
 const server = express()
-server.listen(8000, () => "Listening on port 8080")
+const port = config.PORT;
+console.log(port)
+
+server.listen(port, () => console.log(`Listening on port ${port}`))
 
 export default server;
