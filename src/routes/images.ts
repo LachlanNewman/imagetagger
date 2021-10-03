@@ -61,4 +61,21 @@ router.delete("/:id",async (req:Request,res: Response, next: NextFunction) => {
     res.send({});
 })
 
+router.get("/:id/tags",async (req:Request,res: Response,next:NextFunction) => {
+    const id = parseInt(req.params.id);
+    const image = images[id]
+    const tags = image.tags;
+    res.send({tags})
+})
+
+router.post("/:id/tags",async (req:Request,res: Response,next:NextFunction) => {
+    const tags = req.body.tags as string[]
+    const id = parseInt(req.params.id);
+    const image = images[id]
+    image.tags = tags;
+    res.send(image)
+})
+
+
+
 export default router;
