@@ -10,7 +10,7 @@ router.get("/", async (req:Request,res: Response) => {
 
 router.delete("/:tag", async (req:Request,res: Response) => {
     const tag = req.params.tag;
-    const images = await Image.find();
+    const images = await Image.find({tags: tag});
     for(const image of images){
         const tagIndex = image.tags.indexOf(tag);
         if(tagIndex > -1){
