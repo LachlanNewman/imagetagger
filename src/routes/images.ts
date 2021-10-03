@@ -9,7 +9,7 @@ export interface Image {
     tags: string[];
 };
 
-const images: Image[] = [{
+export const images: Image[] = [{
     id: "0",
     title: "testtitle",
     desc: "testDesc",
