@@ -1,6 +1,23 @@
 import { Router , Request, Response, NextFunction } from "express";
-import { descRequiredError, titleRequiredError } from "../error";
+import { descRequiredError, imageNotFoundError, titleRequiredError } from "../error";
 import Image from "../models/image";
+import multer from "multer";
+
+const storage = multer.diskStorage({
+    destination: (req:Request, file, cb) => {
+        cb(null, 'images')
+    },
+    filename: async (req: Request, file, cb) => {
+        const image = new Image({
+            title: req.body.title,
+            desc: req.body.desc,
+        });
+        await image.save();
+        cb(null, image._id.toString())
+    }
+});
+
+const upload = multer({ storage: storage });
 
 const router = Router()
 
@@ -9,18 +26,22 @@ router.get("/", async (req:Request,res: Response,next:NextFunction) => {
     res.send(images)
 })
 
-router.post("/", async(req:Request,res: Response, next: NextFunction) => {
+router.post("/",upload.single('image'), async(req:Request,res: Response, next: NextFunction) => {
+    if(!req.file){
+        next(imageNotFoundError)
+        return
+    }
+
+    const id = req.file.filename;
     const title = req.body.title;
     const desc = req.body.desc;
 
     if(!title)  { next(titleRequiredError)}
     if(!desc)   { next(descRequiredError)}
 
-    const tags:string[] = [];
-    const image = new Image({title,desc,tags})
-    await image.save();
     res.statusCode = 201;
     res.send({
+        id,
         title,
         desc,
     })
@@ -35,7 +56,7 @@ router.put("/:id", async (req:Request,res: Response, next: NextFunction) => {
     const id = req.params.id;
     const title =  req.body.title
     const desc = req.body.desc;
-    
+
     if(!title)  { next(titleRequiredError)}
     if(!desc)   { next(descRequiredError)}
 
