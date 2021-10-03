@@ -32,6 +32,7 @@ If we use a api gateway such as nginx and have a staging url and production url 
 }
 
 After we are sure the staging enviroment is working as expected we rotate the nginx config like so
+
 /production {
     proxy_pass http://localhost:4000/
 }
