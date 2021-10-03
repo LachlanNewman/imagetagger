@@ -1,5 +1,5 @@
-import { MongoError } from 'mongodb';
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
+import { userNameExistsError } from '../error';
 
 export interface User extends mongoose.Document {
     username: string; 
@@ -9,6 +9,13 @@ export interface User extends mongoose.Document {
   export const UserSchema = new mongoose.Schema({
     username: { type:String, required: true,unique:true},
     password: { type:String, required: true}
+  });
+
+  UserSchema.pre<User>('save', async function() {
+    const user = await User.findOne({username: this.username})
+    if(user){
+      throw userNameExistsError;
+    }
   });
 
   const User = mongoose.model<User>('User', UserSchema);

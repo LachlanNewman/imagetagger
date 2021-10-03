@@ -1,4 +1,5 @@
 import { Router , Request, Response, NextFunction } from "express";
+import { descRequiredError, titleRequiredError } from "../error";
 import Image from "../models/image";
 
 const router = Router()
@@ -11,6 +12,10 @@ router.get("/", async (req:Request,res: Response,next:NextFunction) => {
 router.post("/", async(req:Request,res: Response, next: NextFunction) => {
     const title = req.body.title;
     const desc = req.body.desc;
+
+    if(!title)  { next(titleRequiredError)}
+    if(!desc)   { next(descRequiredError)}
+
     const tags:string[] = [];
     const image = new Image({title,desc,tags})
     await image.save();
@@ -28,8 +33,12 @@ router.get("/:id",async (req:Request,res: Response,next:NextFunction) => {
 
 router.put("/:id", async (req:Request,res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const title =  req.body.titlel
+    const title =  req.body.title
     const desc = req.body.desc;
+    
+    if(!title)  { next(titleRequiredError)}
+    if(!desc)   { next(descRequiredError)}
+
     await Image.findByIdAndUpdate(id,{title,desc})
     const image = await Image.findById(id);
     res.send(image)
